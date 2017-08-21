@@ -30,6 +30,15 @@ def find_trans_by_state(state_list, srcstate, desstate):
                 return cur_trans
     return None
 
+def get_triger_and_desstate(state_list, srcstate):
+    tmpdict = {}
+    for cur_state in state_list:
+        for trans in cur_state.trans:
+            tmpdict[trans.trigger] = trans.desstate
+    return tmpdict
+
+
+#Code for init
 STATE_LIST = []
 for trans in FSM_TRANS_TABLE:
     statecase = find_state_by_name(STATE_LIST, trans['source'])
@@ -41,6 +50,9 @@ for trans in FSM_TRANS_TABLE:
     statecase.add_trans(transcase)
     STATE_LIST.append(statecase)
 
-for states in STATE_LIST:
-    for trans in states.trans:
-        print ('trans src is %8s, trans des is %8s,trig is %8s' %(trans.srcstate, trans.desstate, trans.trigger))
+#CODE FOR TEST:
+for cur_trans in FSM_TRANS_TABLE:
+    result_dict = get_triger_and_desstate(STATE_LIST, cur_trans['source'])
+for tmp_dict in result_dict:
+    print ('result_dict[%s] = %s'%(tmp_dict, result_dict[tmp_dict]))
+
