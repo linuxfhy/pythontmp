@@ -48,27 +48,42 @@ def get_destination_state(state_list, srcstate, trigger):
 
 
 #Code for init
-STATE_LIST = []
+G_STATE_LIST = []
 for trans in FSM_TRANS_TABLE:
-    statecase = find_state_by_name(STATE_LIST, trans['source'])
+    statecase = find_state_by_name(G_STATE_LIST, trans['source'])
     if statecase == None:
         statecase = FsmState(trans['source'])
-    have_trans = find_trans_by_state(STATE_LIST, trans['source'], trans['dest'])
+    have_trans = find_trans_by_state(G_STATE_LIST, trans['source'], trans['dest'])
     if have_trans == False:
         statecase.trans[trans['trigger']] = trans['dest']
-    STATE_LIST.append(statecase)
+    G_STATE_LIST.append(statecase)
 
 #CODE FOR TEST:
-for cur_trans in FSM_TRANS_TABLE:
-    result_dict = get_triger_and_desstate(STATE_LIST, cur_trans['source'])
-    for dict_elmt in result_dict:
-        print("srcstate is %s, trigger is %s, des state is %s"%(cur_trans['source'], dict_elmt, result_dict[dict_elmt]))
+def test_cases():
+    for cur_trans in FSM_TRANS_TABLE:
+        result_dict = get_triger_and_desstate(G_STATE_LIST, cur_trans['source'])
+        for dict_elmt in result_dict:
+            print("srcstate is %s, trigger is %s, des state is %s"%(cur_trans['source'], dict_elmt, result_dict[dict_elmt]))
 
-for cur_trans in FSM_TRANS_TABLE:
-    trigger = get_triger_and_desstate(STATE_LIST, cur_trans['source'])
-    for trigger_elmt in trigger:
-        desstate = get_destination_state(STATE_LIST, cur_trans['source'], trigger_elmt)
-        print("srcstate is %s, trigger is %s, des state is %s"%(cur_trans['source'], trigger_elmt, desstate))
+    for cur_trans in FSM_TRANS_TABLE:
+        trigger = get_triger_and_desstate(G_STATE_LIST, cur_trans['source'])
+        for trigger_elmt in trigger:
+            desstate = get_destination_state(G_STATE_LIST, cur_trans['source'], trigger_elmt)
+            print("srcstate is %s, trigger is %s, des state is %s"%(cur_trans['source'], trigger_elmt, desstate))
+test_cases()
 
+#functions for export
+def FSM_get_init_state():
+    pass
 
+def FSM_get_source_state():
+    src_list = []
+    for cur_state in G_STATE_LIST:
+        src_list.append(cur_state.name)
+    return src_list
 
+def FSM_get_triger_and_desstate(srcstate):
+    for cur_state in G_STATE_LIST:
+        if cur_state.name == srcstate:
+            return cur_state.trans
+    return None
