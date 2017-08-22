@@ -13,9 +13,7 @@ class FsmStateTrans:
 class FsmState:
     def __init__(self, name):
         self.name = name
-        self.trans = []
-    def add_trans(self, trans):
-        self.trans.append(trans)
+        self.trans = {}
 
 def find_state_by_name(state_list, name):
     for cur_state in state_list:
@@ -25,17 +23,28 @@ def find_state_by_name(state_list, name):
 
 def find_trans_by_state(state_list, srcstate, desstate):
     for cur_state in state_list:
-        for cur_trans in cur_state.trans:
-            if cur_trans.srcstate == srcstate and cur_trans.desstate == destate:
-                return cur_trans
-    return None
+        for trigger in cur_state.trans:
+            if cur_state.name == srcstate and cur_trans.trans[trigger] == desstate:
+                return True
+    return False
+
+def get_source_state(state_list):
+    src_list = []
+    for cur_state in state_list:
+        src_list.append(cur_state.name)
+    return src_list
 
 def get_triger_and_desstate(state_list, srcstate):
-    tmpdict = {}
     for cur_state in state_list:
-        for trans in cur_state.trans:
-            tmpdict[trans.trigger] = trans.desstate
-    return tmpdict
+        if cur_state.name == srcstate:
+            return cur_state.trans
+    return None
+
+def get_destination_state(sate_list, srcstate, trigger):
+    for cur_state in state_list:
+        if cur_state.name == srcstate:
+            return cur_state.trans[trigger]
+    return None
 
 
 #Code for init
@@ -44,15 +53,15 @@ for trans in FSM_TRANS_TABLE:
     statecase = find_state_by_name(STATE_LIST, trans['source'])
     if statecase == None:
         statecase = FsmState(trans['source'])
-    transcase = find_trans_by_state(STATE_LIST, trans['source'], trans['dest'])
-    if transcase == None:
-        transcase = FsmStateTrans(trans['source'], trans['dest'], trans['trigger'])
-    statecase.add_trans(transcase)
+    have_trans = find_trans_by_state(STATE_LIST, trans['source'], trans['dest'])
+    if have_trans == False:
+        statecase.trans[trans['trigger']] = trans['dest']
     STATE_LIST.append(statecase)
 
 #CODE FOR TEST:
 for cur_trans in FSM_TRANS_TABLE:
     result_dict = get_triger_and_desstate(STATE_LIST, cur_trans['source'])
-for tmp_dict in result_dict:
-    print ('result_dict[%s] = %s'%(tmp_dict, result_dict[tmp_dict]))
+    for dict_elmt in result_dict:
+        print("srcstate is %s, trigger is %s, des state is %s"%(cur_trans['source'], dict_elmt, result_dict[dict_elmt]))
+
 
