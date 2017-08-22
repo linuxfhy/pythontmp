@@ -1,6 +1,7 @@
 # FSM: Finite State Machine
 FSM_TRANS_TABLE = [
     {'trigger': 'to_睡觉', 'source': '吃饭', 'dest': '睡觉' },
+    {'trigger': 'to_打豆豆', 'source': '吃饭', 'dest': '打豆豆' },
     {'trigger': 'to_打豆豆', 'source': '睡觉', 'dest': '打豆豆'},
     {'trigger': 'to_吃饭', 'source': '打豆豆', 'dest': '吃饭'}]
 
@@ -16,15 +17,18 @@ class FsmState:
         self.trans = {}
 
 def find_state_by_name(state_list, name):
+    #print('enter find_state_by_name')
     for cur_state in state_list:
+        #print('found stae %s'%cur_state.name)
         if cur_state.name == name:
             return cur_state
+    #print('can not find stae %s'%name)
     return None
 
 def find_trans_by_state(state_list, srcstate, desstate):
     for cur_state in state_list:
         for trigger in cur_state.trans:
-            if cur_state.name == srcstate and cur_trans.trans[trigger] == desstate:
+            if cur_state.name == srcstate and cur_state.trans[trigger] == desstate:
                 return True
     return False
 
@@ -53,10 +57,11 @@ for trans in FSM_TRANS_TABLE:
     statecase = find_state_by_name(G_STATE_LIST, trans['source'])
     if statecase == None:
         statecase = FsmState(trans['source'])
+        G_STATE_LIST.append(statecase)
     have_trans = find_trans_by_state(G_STATE_LIST, trans['source'], trans['dest'])
     if have_trans == False:
         statecase.trans[trans['trigger']] = trans['dest']
-    G_STATE_LIST.append(statecase)
+    
 
 #CODE FOR TEST:
 def test_cases():
@@ -70,7 +75,7 @@ def test_cases():
         for trigger_elmt in trigger:
             desstate = get_destination_state(G_STATE_LIST, cur_trans['source'], trigger_elmt)
             print("srcstate is %s, trigger is %s, des state is %s"%(cur_trans['source'], trigger_elmt, desstate))
-test_cases()
+#test_cases()
 
 #functions for export
 def FSM_get_init_state():
