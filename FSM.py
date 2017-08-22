@@ -40,7 +40,7 @@ def get_triger_and_desstate(state_list, srcstate):
             return cur_state.trans
     return None
 
-def get_destination_state(sate_list, srcstate, trigger):
+def get_destination_state(state_list, srcstate, trigger):
     for cur_state in state_list:
         if cur_state.name == srcstate:
             return cur_state.trans[trigger]
@@ -63,5 +63,12 @@ for cur_trans in FSM_TRANS_TABLE:
     result_dict = get_triger_and_desstate(STATE_LIST, cur_trans['source'])
     for dict_elmt in result_dict:
         print("srcstate is %s, trigger is %s, des state is %s"%(cur_trans['source'], dict_elmt, result_dict[dict_elmt]))
+
+for cur_trans in FSM_TRANS_TABLE:
+    trigger = get_triger_and_desstate(STATE_LIST, cur_trans['source'])
+    for trigger_elmt in trigger:
+        desstate = get_destination_state(STATE_LIST, cur_trans['source'], trigger_elmt)
+        print("srcstate is %s, trigger is %s, des state is %s"%(cur_trans['source'], trigger_elmt, desstate))
+
 
 
