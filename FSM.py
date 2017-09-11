@@ -79,7 +79,7 @@ def test_cases():
 
 #functions for export
 def FSM_get_init_state():
-    pass
+    return FSM_TRANS_TABLE[0]['source']
 
 def FSM_get_source_state():
     src_list = []
