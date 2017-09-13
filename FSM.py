@@ -65,6 +65,17 @@ class WorkFlowFSM(object):
                statecase.trans[trans['trigger']] = trans['dest']
     def FSM_get_init_state(self):
         return self.G_STATE_LIST[0].name
+
+    def FSM_get_source_state(self):
+        src_list = []
+        for cur_state in self.G_STATE_LIST:
+            src_list.append(cur_state.name)
+        return src_list
+    def FSM_get_triger_and_desstate(self, srcstate):
+        for cur_state in self.G_STATE_LIST:
+            if cur_state.name == srcstate:
+                return cur_state.trans
+        return None
     
 
 #CODE FOR TEST:
@@ -84,14 +95,7 @@ def test_cases():
 #functions for export
 
 
-def FSM_get_source_state():
-    src_list = []
-    for cur_state in G_STATE_LIST:
-        src_list.append(cur_state.name)
-    return src_list
 
-def FSM_get_triger_and_desstate(srcstate):
-    for cur_state in G_STATE_LIST:
-        if cur_state.name == srcstate:
-            return cur_state.trans
-    return None
+
+
+    
